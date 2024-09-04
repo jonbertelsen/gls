@@ -25,3 +25,10 @@ classDiagram
     address
   }
 ```
+
+```mermaid
+graph TD
+  Package["Package\nid: Long\ntrackingNumber: String"] -->|1 to *| Shipment["Shipment\nid: Long\nshipmentDateTime: LocalDateTime"]
+  Shipment -->|1 to 1 (Source)| Location1["Location\nid: Long\nlatitude: Double\nlongitude: Double\naddress: String"]
+  Shipment -->|1 to 1 (Destination)| Location2["Location\nid: Long\nlatitude: Double\nlongitude: Double\naddress: String"]
+```
