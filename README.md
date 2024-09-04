@@ -2,30 +2,11 @@
 
 ## Domain model
 
-```plaintext
-+----------------+      1   *      +----------------+
-|    Package     |<----------------|    Shipment    |
-+----------------+                 +----------------+
-| ID             |                 | ID             |
-| TrackingNumber |                 | ShipmentDate   |
-+----------------+                 +----------------+
-                                           | 1   | 1
-                                           | *   | *
-                            +----------------+ +----------------+
-                            |   Location     | |   Location     |
-                            +----------------+ +----------------+
-                            | ID             | | ID             |
-                            | Latitude       | | Latitude       |
-                            | Longitude      | | Longitude      |
-                            | Address        | | Address        |
-                            +----------------+ +----------------+
-```
-
 ```mermaid
 classDiagram
   Package --o Shipment : 1..*
-  Shipment --|> Location : "1..1 (Source)"
-  Shipment --|> Location : "1..1 (Destination)"
+  Shipment --|> Location : "1..* (Source)"
+  Shipment --|> Location : "1..* (Destination)"
 
   class Package {
     Long id
