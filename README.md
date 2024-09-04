@@ -2,6 +2,8 @@
 
 ## Domain model
 
+### Mermaid class diagram - almost a domain model
+
 ```mermaid
 classDiagram
   Package --o Shipment : 1..*
@@ -25,6 +27,7 @@ classDiagram
     address
   }
 ```
+## Mermaid graph (not completely a domain model)
 
 ```mermaid
 graph TD
