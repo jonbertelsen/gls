@@ -28,7 +28,7 @@ classDiagram
 
 ```mermaid
 graph TD
-  Package["Package\nid: Long\ntrackingNumber: String"] -->|1 to many| Shipment["Shipment\nid: Long\nshipmentDateTime: LocalDateTime"]
-  Shipment -->|1 to 1 source| Location1["Location\nid: Long\nlatitude: Double\nlongitude: Double\naddress: String"]
-  Shipment -->|1 to 1 destination| Location2["Location\nid: Long\nlatitude: Double\nlongitude: Double\naddress: String"]
+  Package["Package\nid\ntrackingNumber"] -->|1..*| Shipment["Shipment\nid\nshipmentDateTime"]
+  Shipment -->|1..* | Location_source["Location\nid\nlatitude\nlongitude\naddress"]
+  Shipment -->|1..* | Location_destination["Location\nid\nlatitude\nlongitude\naddress"]
 ```
