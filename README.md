@@ -9,19 +9,19 @@ classDiagram
   Shipment --|> Location : "1..* (Destination)"
 
   class Package {
-    Long id
-    String trackingNumber
+    id
+    trackingNumber
   }
 
   class Shipment {
-    Long id
-    LocalDateTime shipmentDateTime
+    id
+    shipmentDateTime
   }
 
   class Location {
-    Long id
-    Double latitude
-    Double longitude
-    String address
+    id
+    latitude
+    longitude
+    address
   }
 ```
