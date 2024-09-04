@@ -1,0 +1,34 @@
+@startuml
+
+enum DeliveryStatus {
+PENDING
+IN_TRANSIT
+DELIVERED
+}
+entity "Package" as Package {
+  +id: Long
+  +trackingNumber: String
+  +DeliveryStatus: DeliveryStatus
+}
+
+entity "Shipment" as Shipment {
+  +id: Long
+  +shipmentDateTime: LocalDateTime
+}
+
+entity "Location" as Location {
+  +id: Long
+  +latitude: Double
+  +longitude: Double
+  +address: String
+}
+
+' Relationships
+Package "1" -- "0..*"  Shipment
+Location "1" -- "0..*" Shipment : "Source"
+Location "1" -- "0..*" Shipment : "  Destination"
+Package ..> DeliveryStatus : uses
+
+
+
+@enduml
