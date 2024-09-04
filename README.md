@@ -2,6 +2,10 @@
 
 ## Domain model
 
+### Let chatGPT make a class diagram in plantuml
+
+![Class diagram](./docs/gls2_class_diagram.png)
+
 ### Mermaid class diagram - almost a domain model
 
 ```mermaid
@@ -26,12 +30,4 @@ classDiagram
     longitude
     address
   }
-```
-## Mermaid graph (not completely a domain model)
-
-```mermaid
-graph TD
-  Package["Package\nid\ntrackingNumber"] -->|1..*| Shipment["Shipment\nid\nshipmentDateTime"]
-  Shipment -->|*..1 | Location_source["Location (source)\nid\nlatitude\nlongitude\naddress"]
-  Shipment -->|*..1 | Location_destination["Location (destination)\nid\nlatitude\nlongitude\naddress"]
 ```
