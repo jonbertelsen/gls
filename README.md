@@ -23,9 +23,9 @@
 
 ```mermaid
 classDiagram
-  Package --o Shipment : "1 to *"
-  Shipment --|> Location : "1 to 1 (Source)"
-  Shipment --|> Location : "1 to 1 (Destination)"
+  Package --o Shipment : 1..*
+  Shipment --|> Location : "1..1 (Source)"
+  Shipment --|> Location : "1..1 (Destination)"
 
   class Package {
     Long id
