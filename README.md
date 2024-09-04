@@ -32,6 +32,6 @@ classDiagram
 ```mermaid
 graph TD
   Package["Package\nid\ntrackingNumber"] -->|1..*| Shipment["Shipment\nid\nshipmentDateTime"]
-  Shipment -->|1..* | Location_source["Location (source)\nid\nlatitude\nlongitude\naddress"]
-  Shipment -->|1..* | Location_destination["Location (destination)\nid\nlatitude\nlongitude\naddress"]
+  Shipment -->|*..1 | Location_source["Location (source)\nid\nlatitude\nlongitude\naddress"]
+  Shipment -->|*..1 | Location_destination["Location (destination)\nid\nlatitude\nlongitude\naddress"]
 ```
