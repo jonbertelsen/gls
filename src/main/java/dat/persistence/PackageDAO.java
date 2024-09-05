@@ -45,7 +45,7 @@ public class PackageDAO implements iDAO<Package> {
                 if (newPackage.getId() == null) {
                     em.persist(newPackage);
                 } else {
-                    em.merge(newPackage);
+                    newPackage = em.merge(newPackage);
                 }
                 // Persist each shipment and ensure relationship sync
                 for (Shipment shipment : newPackage.getShipments()) {
@@ -135,9 +135,6 @@ public class PackageDAO implements iDAO<Package> {
     public boolean delete(Package aPackage) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            for (Shipment shipment : aPackage.getShipments()) {
-                em.remove(shipment);
-            }
             for (Shipment shipment : aPackage.getShipments()) {
                 shipment.getSourceLocation().getShipmentsAsSource().remove(shipment);
                 shipment.getDestinationLocation().getShipmentsAsDestination().remove(shipment);

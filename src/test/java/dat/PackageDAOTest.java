@@ -151,9 +151,11 @@ class PackageDAOTest {
                 .deliveryStatus(DeliveryStatus.DELIVERED)
                 .build();
         assertNotEquals(p1.getDeliveryStatus(), updated.getDeliveryStatus());
-        Package actual = packageDAO.update(updated);
+        Package actual = packageDAO.create(updated);
         // This needs an equals method in the Package class to work
         assertEquals(updated, actual);
+        Package actual2 = packageDAO.findById(p1.getId());
+        assertEquals(DeliveryStatus.DELIVERED, actual2.getDeliveryStatus());
     }
 
     @Test

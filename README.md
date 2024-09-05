@@ -14,7 +14,7 @@
     - Avoid using cascading for `Shipment` and `Location` to have better control over the persistence and updates of these entities. Handle the persistence of related entities explicitly.
 
 2. **Transactional Control:**
-    - Wrap the `createPackage` and `updatePackage` operations in a single transaction using `@Transactional` to ensure that the entire process succeeds or fails as a unit.
+    - Wrap the `createPackage` and `updatePackage` operations in a single transaction to ensure that the entire process succeeds or fails as a unit.
 
 3. **Check Entity Existence:**
     - Before persisting a `Shipment` or `Location`, check if the entity already exists in the database (i.e., if it has a non-null `id`).
