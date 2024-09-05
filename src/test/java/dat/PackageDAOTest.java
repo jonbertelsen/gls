@@ -1,21 +1,32 @@
 package dat;
 
+import dat.entities.Location;
 import dat.entities.Package;
+import dat.entities.Shipment;
 import dat.enums.DeliveryStatus;
 import dat.enums.HibernateConfigState;
 import dat.exceptions.JpaException;
+import dat.persistence.LocationDAO;
 import dat.persistence.PackageDAO;
+import dat.persistence.ShipmentDAO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PackageDAOTest {
 
-    private static final PackageDAO packageDAO = PackageDAO.getInstance(HibernateConfigState.TEST);
+    private static final PackageDAO packageDAO = PackageDAO.getInstance(HibernateConfigState.NORMAL);
+    private static final LocationDAO locationDAO = LocationDAO.getInstance(HibernateConfigState.NORMAL);
+    private static final ShipmentDAO shipmentDAO = ShipmentDAO.getInstance(HibernateConfigState.NORMAL);
     private static Package p1, p2, p3;
+    private static Location l1, l2, l3;
+    private static Shipment s1, s2, s3;
 
     @BeforeAll
     void setUpAll() {
@@ -28,6 +39,10 @@ class PackageDAOTest {
         // Reset table and sequence before each test
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
+            em.createQuery("DELETE FROM Shipment").executeUpdate();
+            em.createNativeQuery("ALTER SEQUENCE shipment_id_seq RESTART WITH 1").executeUpdate();
+            em.createQuery("DELETE FROM Location").executeUpdate();
+            em.createNativeQuery("ALTER SEQUENCE location_id_seq RESTART WITH 1").executeUpdate();
             em.createQuery("DELETE FROM Package").executeUpdate();
             em.createNativeQuery("ALTER SEQUENCE package_id_seq RESTART WITH 1").executeUpdate();
             em.getTransaction().commit();
@@ -42,6 +57,7 @@ class PackageDAOTest {
                 .receiver("Daenerys Targaryen")
                 .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
+
         p2 = Package.builder()
                 .trackingNumber("987654321")
                 .sender("Ayria Stark")
@@ -54,9 +70,41 @@ class PackageDAOTest {
                 .receiver("Tyrion Lannister")
                 .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
+        l1 = Location.builder()
+                .latitude(40.7128)
+                .longitude(-74.0060)
+                .address("New York, NY, USA")
+                .build();
+        l2 = Location.builder()
+                .latitude(34.0522)
+                .longitude(-118.2437)
+                .address("Los Angeles, CA, USA")
+                .build();
+        l3 = Location.builder()
+                .latitude(41.8781)
+                .longitude(-87.6298)
+                .address("Chicago, IL, USA")
+                .build();
+        s1 = Shipment.builder()
+                .shipmentDateTime(LocalDateTime.of(2021, 1, 1, 12, 0))
+                .build();
+        s2 = Shipment.builder()
+                .shipmentDateTime(LocalDateTime.of(2021, 2, 1, 12, 0))
+                .build();
+        s3 = Shipment.builder()
+                .shipmentDateTime(LocalDateTime.of(2021, 3, 1, 12, 0))
+                .build();
+
+//        locationDAO.create(l1);
+//        locationDAO.create(l2);
+//        locationDAO.create(l3);
+
+        s1.addSourceLocation(l1);
+        s1.addDestinationLocation(l2);
+        p1.addShipment(s1);
         packageDAO.create(p1);
-        packageDAO.create(p2);
-        packageDAO.create(p3);
+        s2.addSourceLocation(l3);
+        s2.addDestinationLocation(l2);
     }
 
     @AfterAll
@@ -77,8 +125,9 @@ class PackageDAOTest {
                             .receiver("Sansa Stark")
                             .deliveryStatus(DeliveryStatus.PENDING)
                             .build();
+        p4.addShipment(s2);
         packageDAO.create(p4);
-        assertEquals(4, p4.getId());
+        assertEquals(2, p4.getId());
     }
 
     @Test

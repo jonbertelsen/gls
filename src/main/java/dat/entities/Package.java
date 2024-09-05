@@ -43,8 +43,9 @@ public class Package {
     @Column(name = "updated_date_time", nullable = false)
     private LocalDateTime updatedDateTime;
 
-    @OneToMany(mappedBy = "relatedPackage", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "relatedPackage")
     @ToString.Exclude // To prevent infinite recursion in toString()
+    @Builder.Default
     private Set<Shipment> shipments = new HashSet<>();
 
     @PrePersist
@@ -61,4 +62,24 @@ public class Package {
     public void preUpdate() {
         updatedDateTime = LocalDateTime.now();
     }
+
+    public void Package() {
+        this.shipments = new HashSet<>();
+    }
+
+    /* Bi-directional relationship methods */
+    public void addShipment(Shipment shipment) {
+        if (shipment != null) {
+            this.shipments.add(shipment);
+            shipment.setRelatedPackage(this);
+            }
+    }
+
+    public void removeShipment(Shipment shipment) {
+        if (shipment != null) {
+            this.shipments.remove(shipment);
+            shipment.setRelatedPackage(null);
+        }
+    }
+
 }

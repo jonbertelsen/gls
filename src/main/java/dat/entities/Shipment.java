@@ -2,6 +2,8 @@ package dat.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.awt.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -45,10 +47,28 @@ public class Shipment {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    // Add bidirectional relationship with Package
+
+    public void addSourceLocation(Location location) {
+        if (location != null) {
+            this.sourceLocation = location;
+            location.getShipmentsAsSource().add(this);
+        }
+    }
+
+    public void addDestinationLocation(Location location) {
+        if (location != null) {
+            this.destinationLocation = location;
+            location.getShipmentsAsDestination().add(this);
+        }
+    }
+
 }

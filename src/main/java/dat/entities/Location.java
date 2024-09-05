@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,15 +32,6 @@ public class Location {
     @Column(name = "address", nullable = false, length = 255)
     private String address;
 
-    // Eager loading is default. Lazy gives better performance, but may cause issues if not handled properly
-    @OneToMany(mappedBy = "sourceLocation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @ToString.Exclude // Prevent circular reference in toString()
-    private List<Shipment> shipmentsAsSource;
-
-    @OneToMany(mappedBy = "destinationLocation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @ToString.Exclude // Prevent circular reference in toString()
-    private List<Shipment> shipmentsAsDestination;
-
     // Timestamps for auditing
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -50,11 +43,53 @@ public class Location {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    /* Bidirectional one-to-many relationship with Shipment */
+
+    // Eager loading is default. Lazy gives better performance, but may cause issues if not handled properly
+    @OneToMany(mappedBy = "sourceLocation")
+    @ToString.Exclude // Prevent circular reference in toString()
+    @Builder.Default
+    private Set<Shipment> shipmentsAsSource = new HashSet<>();
+
+    @OneToMany(mappedBy = "destinationLocation")
+    @ToString.Exclude // Prevent circular reference in toString()
+    @Builder.Default
+    private Set<Shipment> shipmentsAsDestination = new HashSet<>();
+
+    public void addShipmentAsSource(Shipment shipment) {
+        if (shipment != null) {
+            shipmentsAsSource.add(shipment);
+            shipment.setSourceLocation(this);
+        }
+    }
+
+    public void addShipmentAsDestination(Shipment shipment) {
+        if (shipment != null) {
+            shipmentsAsDestination.add(shipment);
+            shipment.setDestinationLocation(this);
+        }
+    }
+
+    public void removeShipmentAsSource(Shipment shipment) {
+        if (shipment != null) {
+            shipmentsAsSource.remove(shipment);
+            shipment.setSourceLocation(null);
+        }
+    }
+
+    public void removeShipmentAsDestination(Shipment shipment) {
+        if (shipment != null) {
+            shipmentsAsDestination.remove(shipment);
+            shipment.setDestinationLocation(null);
+        }
     }
 
 }
