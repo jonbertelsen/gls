@@ -6,7 +6,7 @@
 
 ## ERD  diagram
 
-![ERD diagram](./docs/erd.png)
+![ERD diagram](./docs/er-diagram.png)
 
 ## Recommendation from chatGPT regarding Persisting and Updating the `Package`, `Shipment`, and `Location` Entities
 
