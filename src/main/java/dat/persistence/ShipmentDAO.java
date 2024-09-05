@@ -35,13 +35,6 @@ public class ShipmentDAO implements iDAO<Shipment> {
 
     @Override
     public Shipment create(Shipment aShipment) {
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(aShipment);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            throw new JpaException("Error creating shipment: " + e.getMessage());
-        }
         return aShipment;
     }
 
@@ -56,26 +49,11 @@ public class ShipmentDAO implements iDAO<Shipment> {
 
     @Override
     public Shipment update(Shipment aShipment) {
-        Shipment updatedShipment = null;
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            updatedShipment = em.merge(aShipment);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            throw new JpaException("Error updating shipment: " + e.getMessage());
-        }
-        return updatedShipment;
+        return aShipment;
     }
 
     @Override
     public boolean delete(Shipment aShipment) {
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.remove(aShipment);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            return false;
-        }
         return true;
     }
 }

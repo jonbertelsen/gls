@@ -36,13 +36,6 @@ public class LocationDAO implements iDAO<Location> {
 
     @Override
     public Location create(Location aLocation) {
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(aLocation);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            throw new JpaException("Error creating package: " + e.getMessage());
-        }
         return aLocation;
     }
 
@@ -82,13 +75,6 @@ public class LocationDAO implements iDAO<Location> {
 
     @Override
     public boolean delete(Location aLocation) {
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.remove(aLocation);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            return false;
-        }
         return true;
     }
 }
