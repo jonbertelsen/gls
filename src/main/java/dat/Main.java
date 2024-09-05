@@ -21,7 +21,7 @@ public class Main {
         Location location = Location.builder().latitude(40.7128).longitude(-74.0060).address("New York, NY, USA").build();
 
         // Instantiate a shipment
-        Shipment shipment = Shipment.builder().pkg(aPackage).sourceLocation(location).destinationLocation(location).shipmentDateTime(LocalDateTime.now()).build();
+        Shipment shipment = Shipment.builder().relatedPackage(aPackage).sourceLocation(location).destinationLocation(location).shipmentDateTime(LocalDateTime.now()).build();
 
     }
 

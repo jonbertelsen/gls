@@ -43,7 +43,7 @@ public class Package {
     @Column(name = "updated_date_time", nullable = false)
     private LocalDateTime updatedDateTime;
 
-    @OneToMany(mappedBy = "pkg", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "relatedPackage", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude // To prevent infinite recursion in toString()
     private Set<Shipment> shipments = new HashSet<>();
 

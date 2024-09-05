@@ -4,3 +4,7 @@
 
 ![Class diagram](./docs/gls2_class_diagram.jpg)
 
+## ERD  diagram
+
+![ERD diagram](./docs/erd.png)
+

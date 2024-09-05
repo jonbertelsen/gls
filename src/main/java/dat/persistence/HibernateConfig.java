@@ -32,6 +32,8 @@ public class HibernateConfig {
     private static void getAnnotationConfiguration(Configuration configuration) {
         // add annotated classes --- remember to add new entities here
         configuration.addAnnotatedClass(Package.class);
+        configuration.addAnnotatedClass(dat.entities.Location.class);
+        configuration.addAnnotatedClass(dat.entities.Shipment.class);
     }
 
     private static EntityManagerFactory buildEntityFactoryConfig() {
