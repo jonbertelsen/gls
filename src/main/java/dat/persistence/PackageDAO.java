@@ -119,15 +119,7 @@ public class PackageDAO implements iDAO<Package> {
 
     @Override
     public Package update(Package aPackage) {
-        Package updatedPackage = null;
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            updatedPackage = em.merge(aPackage);
-            em.getTransaction().commit();
-        }
-        catch (Exception e) {
-            throw new JpaException("Error updating package: " + e.getMessage());
-        }
+        Package updatedPackage = create(aPackage);
         return updatedPackage;
     }
 
