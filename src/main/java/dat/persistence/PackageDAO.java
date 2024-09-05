@@ -37,57 +37,52 @@ public class PackageDAO implements iDAO<Package> {
 
     @Override
     public Package create(Package newPackage) {
-        EntityManager em = null;
-        try {
-            em = emf.createEntityManager();
+
+        try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
+            try {
+                // Persist package
+                if (newPackage.getId() == null) {
+                    em.persist(newPackage);
+                } else {
+                    em.merge(newPackage);
+                }
+                // Persist each shipment and ensure relationship sync
+                for (Shipment shipment : newPackage.getShipments()) {
+                    shipment.setRelatedPackage(newPackage);  // Synchronize relationship
 
-            // Persist package
-            if (newPackage.getId() == null) {
-                em.persist(newPackage);
-            } else {
-                em.merge(newPackage);
-            }
-
-            // Persist each shipment and ensure relationship sync
-            for (Shipment shipment : newPackage.getShipments()) {
-                shipment.setRelatedPackage(newPackage);  // Synchronize relationship
-
-                // Persist or merge locations
-                if (shipment.getSourceLocation() != null && shipment.getDestinationLocation() != null) {
+                    // Persist or merge locations
+                    if (shipment.getSourceLocation() != null && shipment.getDestinationLocation() != null) {
+                        persistOrMergeLocation(shipment.getSourceLocation(), em);
+                        persistOrMergeLocation(shipment.getDestinationLocation(), em);
+                    } else {
+                        if (em != null && em.getTransaction().isActive()) {
+                            em.getTransaction().rollback();  // Rollback transaction on failure
+                        }
+                        throw new JpaException("Error creating package: Shipment locations cannot be null");
+                    }
                     persistOrMergeLocation(shipment.getSourceLocation(), em);
                     persistOrMergeLocation(shipment.getDestinationLocation(), em);
-                } else {
-                    if (em != null && em.getTransaction().isActive()) {
-                        em.getTransaction().rollback();  // Rollback transaction on failure
-                    }
-                    throw new JpaException("Error creating package: Shipment locations cannot be null");
-                }
-                persistOrMergeLocation(shipment.getSourceLocation(), em);
-                persistOrMergeLocation(shipment.getDestinationLocation(), em);
 
-                if (shipment.getId() == null) {
-                    em.persist(shipment);
-                } else {
-                    em.merge(shipment);
+                    if (shipment.getId() == null) {
+                        em.persist(shipment);
+                    } else {
+                        em.merge(shipment);
+                    }
                 }
+                em.getTransaction().commit();
             }
-            em.getTransaction().commit();
-        }
-        catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();  // Rollback transaction on failure
+            catch (Exception e) {
+                if (em != null && em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();  // Rollback transaction on failure
+                }
+                throw new JpaException("Error creating package. Transaction is rolledback: " + e.getMessage());
             }
-            throw new JpaException("Error creating package: " + e.getMessage());
+            return newPackage;
         }
-        finally {
-            if (em != null) {
-                em.close();  // Always close the EntityManager
-            }
-        }
-        return newPackage;
     }
 
+    // Helper method to persist location used in a shipment
     private void persistOrMergeLocation(Location location, EntityManager em) {
         if (location != null) {
             if (location.getId() == null) {

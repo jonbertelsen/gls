@@ -21,9 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PackageDAOTest {
 
-    private static final PackageDAO packageDAO = PackageDAO.getInstance(HibernateConfigState.NORMAL);
-    private static final LocationDAO locationDAO = LocationDAO.getInstance(HibernateConfigState.NORMAL);
-    private static final ShipmentDAO shipmentDAO = ShipmentDAO.getInstance(HibernateConfigState.NORMAL);
+    private final static HibernateConfigState state = HibernateConfigState.TEST;
+    private static final PackageDAO packageDAO = PackageDAO.getInstance(state);
+    private static final LocationDAO locationDAO = LocationDAO.getInstance(state);
+    private static final ShipmentDAO shipmentDAO = ShipmentDAO.getInstance(state);
     private static Package p1, p2, p3;
     private static Location l1, l2, l3;
     private static Shipment s1, s2, s3;
@@ -94,10 +95,6 @@ class PackageDAOTest {
         s3 = Shipment.builder()
                 .shipmentDateTime(LocalDateTime.of(2021, 3, 1, 12, 0))
                 .build();
-
-//        locationDAO.create(l1);
-//        locationDAO.create(l2);
-//        locationDAO.create(l3);
 
         s1.addSourceLocation(l1);
         s1.addDestinationLocation(l2);
